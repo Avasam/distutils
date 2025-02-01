@@ -2,9 +2,9 @@
 
 from distutils.tests import support
 from distutils.text_file import TextFile
+from pathlib import Path
 
 import jaraco.path
-import path
 
 TEST_DATA = """# test file
 
@@ -55,7 +55,7 @@ class TestTextFile(support.TempdirManager):
             result = file.readlines()
             assert result == expected_result
 
-        tmp_path = path.Path(self.mkdtemp())
+        tmp_path = Path(self.mkdtemp())
         filename = tmp_path / 'test.txt'
         jaraco.path.build({filename.name: TEST_DATA}, tmp_path)
 

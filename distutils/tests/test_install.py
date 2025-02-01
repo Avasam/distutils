@@ -2,7 +2,6 @@
 
 import logging
 import os
-import pathlib
 import site
 import sys
 from distutils import sysconfig
@@ -14,6 +13,7 @@ from distutils.errors import DistutilsOptionError
 from distutils.extension import Extension
 from distutils.tests import missing_compiler_executable, support
 from distutils.util import is_mingw
+from pathlib import Path
 
 import pytest
 
@@ -194,9 +194,9 @@ class TestInstall(
         cmd.ensure_finalized()
         cmd.run()
 
-        content = pathlib.Path(cmd.record).read_text(encoding='utf-8')
+        content = Path(cmd.record).read_text(encoding='utf-8')
 
-        found = [pathlib.Path(line).name for line in content.splitlines()]
+        found = [Path(line).name for line in content.splitlines()]
         expected = [
             'hello.py',
             f'hello.{sys.implementation.cache_tag}.pyc',
@@ -228,9 +228,9 @@ class TestInstall(
         cmd.ensure_finalized()
         cmd.run()
 
-        content = pathlib.Path(cmd.record).read_text(encoding='utf-8')
+        content = Path(cmd.record).read_text(encoding='utf-8')
 
-        found = [pathlib.Path(line).name for line in content.splitlines()]
+        found = [Path(line).name for line in content.splitlines()]
         expected = [
             _make_ext_name('xx'),
             'UNKNOWN-0.0.0-py{}.{}.egg-info'.format(*sys.version_info[:2]),

@@ -3,15 +3,15 @@
 import contextlib
 import distutils
 import os
-import pathlib
 import subprocess
 import sys
 from distutils import sysconfig
 from distutils.ccompiler import new_compiler  # noqa: F401
 from distutils.unixccompiler import UnixCCompiler
+from pathlib import Path
 
 import jaraco.envs
-import path
+import jaraco.path
 import pytest
 from jaraco.text import trim
 from test.support import swap_item
@@ -47,19 +47,19 @@ class TestSysconfig:
     @pytest.mark.xfail('platform.system() == "Windows"')
     def test_srcdir_simple(self):
         # See #15364.
-        srcdir = pathlib.Path(sysconfig.get_config_var('srcdir'))
+        srcdir = Path(sysconfig.get_config_var('srcdir'))
 
         assert srcdir.absolute()
         assert srcdir.is_dir()
 
-        makefile = pathlib.Path(sysconfig.get_makefile_filename())
+        makefile = Path(sysconfig.get_makefile_filename())
         assert makefile.parent.samefile(srcdir)
 
     @pytest.mark.skipif('sysconfig.IS_PYPY')
     @pytest.mark.skipif('not sysconfig.python_build')
     def test_srcdir_python_build(self):
         # See #15364.
-        srcdir = pathlib.Path(sysconfig.get_config_var('srcdir'))
+        srcdir = Path(sysconfig.get_config_var('srcdir'))
 
         # The python executable has not been installed so srcdir
         # should be a full source checkout.
@@ -74,7 +74,7 @@ class TestSysconfig:
         """
         # See #15364.
         srcdir = sysconfig.get_config_var('srcdir')
-        with path.Path('..'):
+        with jaraco.path.DirectoryStack().context('..'):
             srcdir2 = sysconfig.get_config_var('srcdir')
         assert srcdir == srcdir2
 

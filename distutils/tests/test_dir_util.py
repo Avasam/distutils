@@ -1,7 +1,6 @@
 """Tests for distutils.dir_util."""
 
 import os
-import pathlib
 import stat
 import sys
 import unittest.mock as mock
@@ -14,9 +13,9 @@ from distutils.dir_util import (
     remove_tree,
 )
 from distutils.tests import support
+from pathlib import Path
 
 import jaraco.path
-import path
 import pytest
 
 
@@ -74,7 +73,7 @@ class TestDirUtil(support.TempdirManager):
         remove_tree(self.root_target, verbose=False)
 
         mkpath(self.target, verbose=False)
-        a_file = path.Path(self.target) / 'ok.txt'
+        a_file = Path(self.target) / 'ok.txt'
         jaraco.path.build({'ok.txt': 'some content'}, self.target)
 
         wanted = [f'copying {a_file} -> {self.target2}']
@@ -121,12 +120,12 @@ class TestDirUtil(support.TempdirManager):
         pypa/distutils#304
         """
 
-        class FailPath(pathlib.Path):
+        class FailPath(Path):
             def mkdir(self, *args, **kwargs):
                 raise OSError("Failed to create directory")
 
             if sys.version_info < (3, 12):
-                _flavour = pathlib.Path()._flavour
+                _flavour = Path()._flavour
 
         target = tmp_path / 'foodir'
 

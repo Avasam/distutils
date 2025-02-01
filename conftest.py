@@ -1,11 +1,11 @@
 import logging
 import os
-import pathlib
 import platform
 import sys
+from pathlib import Path
 
-import path
 import pytest
+from jaraco.path import DirectoryStack
 
 
 @pytest.fixture
@@ -43,7 +43,7 @@ def capture_log_at_info(caplog):
 
 
 def _save_cwd():
-    return path.Path('.')
+    return Path('.')
 
 
 @pytest.fixture
@@ -78,7 +78,7 @@ def save_cwd():
 
 @pytest.fixture
 def temp_cwd(tmp_path):
-    with path.Path(tmp_path):
+    with DirectoryStack().context(tmp_path):
         yield
 
 
@@ -118,7 +118,7 @@ def temp_home(tmp_path, monkeypatch):
 @pytest.fixture
 def fake_home(fs, monkeypatch):
     home = fs.create_dir('/fakehome')
-    return _set_home(monkeypatch, pathlib.Path(home.path))
+    return _set_home(monkeypatch, Path(home.path))
 
 
 @pytest.fixture

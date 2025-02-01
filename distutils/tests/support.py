@@ -2,12 +2,12 @@
 
 import itertools
 import os
-import pathlib
 import shutil
 import sys
 import sysconfig
 import tempfile
 from distutils.core import Distribution
+from pathlib import Path
 
 import pytest
 from more_itertools import always_iterable
@@ -33,7 +33,7 @@ class TempdirManager:
 
         path can be a string or a sequence.
         """
-        pathlib.Path(*always_iterable(path)).write_text(content, encoding='utf-8')
+        Path(*always_iterable(path)).write_text(content, encoding='utf-8')
 
     def create_dist(self, pkg_name='foo', **kw):
         """Will generate a test environment.

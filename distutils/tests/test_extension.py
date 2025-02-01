@@ -1,9 +1,9 @@
 """Tests for distutils.extension."""
 
 import os
-import pathlib
 import warnings
 from distutils.extension import Extension, read_setup_file
+from pathlib import Path
 
 import pytest
 from test.support.warnings_helper import check_warnings
@@ -75,7 +75,7 @@ class TestExtension:
             Extension('name', ['file', 1])
         ext = Extension('name', ['file1', 'file2'])
         assert ext.sources == ['file1', 'file2']
-        ext = Extension('name', [pathlib.Path('file1'), pathlib.Path('file2')])
+        ext = Extension('name', [Path('file1'), Path('file2')])
         assert ext.sources == ['file1', 'file2']
 
         # any non-string iterable of strings or PathLike objects should work
@@ -85,7 +85,7 @@ class TestExtension:
         assert sorted(ext.sources) == ['file1', 'file2']
         ext = Extension('name', iter(['file1', 'file2']))  # iterator
         assert ext.sources == ['file1', 'file2']
-        ext = Extension('name', [pathlib.Path('file1'), 'file2'])  # mixed types
+        ext = Extension('name', [Path('file1'), 'file2'])  # mixed types
         assert ext.sources == ['file1', 'file2']
 
         # others arguments have defaults

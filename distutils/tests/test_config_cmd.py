@@ -5,9 +5,9 @@ import sys
 from distutils._log import log
 from distutils.command.config import config, dump_file
 from distutils.tests import missing_compiler_executable, support
+from pathlib import Path
 
 import more_itertools
-import path
 import pytest
 
 
@@ -25,7 +25,7 @@ class TestConfig(support.TempdirManager):
             self._logs.append(line)
 
     def test_dump_file(self):
-        this_file = path.Path(__file__).with_suffix('.py')
+        this_file = Path(__file__).with_suffix('.py')
         with this_file.open(encoding='utf-8') as f:
             numlines = more_itertools.ilen(f)
 

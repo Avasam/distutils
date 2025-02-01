@@ -7,9 +7,10 @@ import unittest.mock as mock
 from distutils.errors import DistutilsExecError
 from distutils.spawn import find_executable, spawn
 from distutils.tests import support
+from pathlib import Path
 
-import path
 import pytest
+from jaraco.path import DirectoryStack
 from test.support import unix_shell
 
 from .compat import py39 as os_helper
@@ -49,7 +50,7 @@ class TestSpawn(support.TempdirManager):
         program = program_path.name
         program_noeext = program_path.with_suffix('').name
         filename = str(program_path)
-        tmp_dir = path.Path(tmp_path)
+        tmp_dir = str(Path(tmp_path))
 
         # test path parameter
         rv = find_executable(program, path=tmp_dir)
@@ -61,7 +62,7 @@ class TestSpawn(support.TempdirManager):
             assert rv == filename
 
         # test find in the current directory
-        with tmp_dir:
+        with DirectoryStack().context(tmp_dir):
             rv = find_executable(program)
             assert rv == program
 
@@ -83,7 +84,7 @@ class TestSpawn(support.TempdirManager):
                 assert rv is None
 
                 # look in current directory
-                with tmp_dir:
+                with DirectoryStack().context(tmp_dir):
                     rv = find_executable(program)
                     assert rv == program
 
@@ -98,7 +99,7 @@ class TestSpawn(support.TempdirManager):
                 assert rv is None
 
                 # look in current directory
-                with tmp_dir:
+                with DirectoryStack().context(tmp_dir):
                     rv = find_executable(program)
                     assert rv == program
 

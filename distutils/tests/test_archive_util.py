@@ -3,7 +3,6 @@
 import functools
 import operator
 import os
-import pathlib
 import sys
 import tarfile
 from distutils import archive_util
@@ -17,9 +16,10 @@ from distutils.archive_util import (
 from distutils.spawn import spawn
 from distutils.tests import support
 from os.path import splitdrive
+from pathlib import Path
 
-import path
 import pytest
+from jaraco.path import DirectoryStack
 from test.support import patch
 
 from .unix_compat import UID_0_SUPPORT, grp, pwd, require_uid_0, require_unix_id
@@ -43,7 +43,7 @@ def all_equal(values):
 
 
 def same_drive(*paths):
-    return all_equal(pathlib.Path(path).drive for path in paths)
+    return all_equal(Path(path).drive for path in paths)
 
 
 class ArchiveUtilTestCase(support.TempdirManager):
@@ -93,7 +93,7 @@ class ArchiveUtilTestCase(support.TempdirManager):
         base_name = os.path.join(tmpdir2, target_name)
 
         # working with relative paths to avoid tar warnings
-        with path.Path(tmpdir):
+        with DirectoryStack().context(tmpdir):
             make_tarball(splitdrive(base_name)[1], 'dist', **kwargs)
 
         # check if the compressed tarball was created
@@ -194,7 +194,7 @@ class ArchiveUtilTestCase(support.TempdirManager):
         # creating something to tar
         tmpdir = self._create_files()
         base_name = os.path.join(self.mkdtemp(), 'archive')
-        with path.Path(tmpdir):
+        with DirectoryStack().context(tmpdir):
             make_zipfile(base_name, 'dist')
 
         # check if the compressed tarball was created
@@ -220,7 +220,7 @@ class ArchiveUtilTestCase(support.TempdirManager):
         # create something to tar and compress
         tmpdir = self._create_files()
         base_name = os.path.join(self.mkdtemp(), 'archive')
-        with path.Path(tmpdir):
+        with DirectoryStack().context(tmpdir):
             make_zipfile(base_name, 'dist')
 
         tarball = base_name + '.zip'

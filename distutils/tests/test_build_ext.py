@@ -21,9 +21,9 @@ from distutils.extension import Extension
 from distutils.tests import missing_compiler_executable
 from distutils.tests.support import TempdirManager, copy_xxmodule_c, fixup_build_ext
 from io import StringIO
+from pathlib import Path
 
 import jaraco.path
-import path
 import pytest
 from test import support
 
@@ -34,7 +34,7 @@ from .compat import py39 as import_helper
 def user_site_dir(request):
     self = request.instance
     self.tmp_dir = self.mkdtemp()
-    self.tmp_path = path.Path(self.tmp_dir)
+    self.tmp_path = Path(self.tmp_dir)
     from distutils.command import build_ext
 
     orig_user_base = site.USER_BASE

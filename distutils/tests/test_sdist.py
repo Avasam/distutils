@@ -1,7 +1,6 @@
 """Tests for distutils.command.sdist."""
 
 import os
-import pathlib
 import shutil  # noqa: F401
 import tarfile
 import zipfile
@@ -11,10 +10,10 @@ from distutils.core import Distribution
 from distutils.errors import DistutilsOptionError
 from distutils.filelist import FileList
 from os.path import join
+from pathlib import Path
 from textwrap import dedent
 
 import jaraco.path
-import path
 import pytest
 from more_itertools import ilen
 
@@ -58,12 +57,12 @@ def project_dir(request, distutils_managed_tempdir):
         },
         self.tmp_dir,
     )
-    with path.Path(self.tmp_dir):
+    with jaraco.path.DirectoryStack().context(self.tmp_dir):
         yield
 
 
 def clean_lines(filepath):
-    with pathlib.Path(filepath).open(encoding='utf-8') as f:
+    with jaraco.path.DirectoryStack().context(filepath).open(encoding='utf-8') as f:
         yield from filter(None, map(str.strip, f))
 
 
@@ -248,7 +247,7 @@ class TestSDist(support.TempdirManager):
         assert sorted(content) == ['ns_fake_pkg-1.0/' + x for x in expected]
 
         # checking the MANIFEST
-        manifest = pathlib.Path(self.tmp_dir, 'MANIFEST').read_text(encoding='utf-8')
+        manifest = Path(self.tmp_dir, 'MANIFEST').read_text(encoding='utf-8')
         assert manifest == MANIFEST % {'sep': os.sep}
 
     @staticmethod
