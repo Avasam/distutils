@@ -100,7 +100,6 @@ class Distribution:
     global_options: ClassVar[_OptionsList] = [
         ('verbose', 'v', "run verbosely (default)", 1),
         ('quiet', 'q', "run quietly (turns verbosity off)"),
-        ('dry-run', 'n', "don't actually do anything"),
         ('help', 'h', "show detailed help message"),
         ('no-user-cfg', None, 'ignore pydistutils.cfg in your home directory'),
     ]
@@ -165,7 +164,6 @@ Common commands: (see '--help-commands' for more)
 
         # Default values for our command-line options
         self.verbose = True
-        self.dry_run = False
         self.help = False
         for attr in self.display_option_names:
             setattr(self, attr, False)
@@ -447,7 +445,7 @@ Common commands: (see '--help-commands' for more)
                 try:
                     if alias:
                         setattr(self, alias, not strtobool(val))
-                    elif opt in ('verbose', 'dry_run'):  # ugh!
+                    elif opt in ('verbose',):  # ugh!
                         setattr(self, opt, strtobool(val))
                     else:
                         setattr(self, opt, val)
