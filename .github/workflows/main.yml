@@ -153,7 +153,6 @@ jobs:
             mingw-w64-${{matrix.env}}-python-pip
             mingw-w64-${{matrix.env}}-python-virtualenv
             mingw-w64-${{matrix.env}}-cc
-            ca-certificates
             git
       - name: Install Dependencies
         shell: msys2 {0}
@@ -162,13 +161,14 @@ jobs:
           CXX: ${{ matrix.cxx }}
         run: |
           export VIRTUALENV_NO_SETUPTOOLS=1
-
+          
           python -m virtualenv /tmp/venv
           source /tmp/venv/bin/activate
 
           # python-ruff doesn't work without rust
           sed -i '/pytest-ruff/d' pyproject.toml
 
+          export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
           pip install -e .[test]
       - name: Run tests
         shell: msys2 {0}
