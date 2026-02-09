@@ -153,6 +153,7 @@ jobs:
             mingw-w64-${{matrix.env}}-python-pip
             mingw-w64-${{matrix.env}}-python-virtualenv
             mingw-w64-${{matrix.env}}-cc
+            ca-certificates
             git
       - name: Install Dependencies
         shell: msys2 {0}
